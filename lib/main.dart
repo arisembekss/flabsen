@@ -1,4 +1,7 @@
+import 'package:flabsen/screens/screen_users.dart';
+import 'package:flabsen/state/state_login.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,22 +27,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Flutter Absen Demo'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -48,18 +42,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  final GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -70,46 +53,159 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(widget.title),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        body: ChangeNotifierProvider(
+          create: (_) => StateLogin(),
+          child: Consumer<StateLogin>(
+            builder: (context, state, _) => Center(
+                child: SizedBox(
+              width: 400,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Login'),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      width: 250,
+                      child: TextFormField(
+                        controller: state.unameController,
+                        decoration: InputDecoration(
+                          label: const Text('Username'),
+                          prefixIcon: const Icon(Icons.person, color: Colors.blue,),
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusColor: Colors.blue,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                color: Colors.blue,
+                              ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          // hintText: 'Email',
+                        ),
+                      )
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: 250,
+                      child: TextFormField(
+                        controller: state.passController,
+                        obscureText: true,
+                        obscuringCharacter: '*',
+                        decoration: InputDecoration(
+                          label: const Text('Password'),
+                          prefixIcon: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('* * *', style: TextStyle(color: Colors.blue),),
+                              Container(
+                                width: 30,
+                                height: 2,
+                                color: Colors.blue,
+                              )
+                            ],
+                          ),
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusColor: Colors.blue,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          // hintText: 'Email',
+                        ),
+                      )
+                      // TextFormField(
+                      //   controller: state.passController,
+                      //   obscureText: true,
+                      //   decoration:
+                      //       Style.textInputDecorSuffixPrefix(
+                      //         label: 'Password',
+                      //         iconPrefix: Container(
+                      //           width: 50,
+                      //           child: Column(
+                      //             children: [
+                      //               Text('* * *'),
+                      //               Container(
+                      //                 width: 30,
+                      //                 height: 2,
+                      //                 color: Colors.blue,
+                      //               )
+                      //             ],
+                      //           ),
+                      //         )
+                      //       ),
+                      // ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: 200,
+                      height: 50,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            state.prosesLogin().then((value) {
+                              if(state.loadingLogin == LoadState.error){
+                                final snackBar = SnackBar(
+                                  content: Text(state.errorMesssage),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                return;
+                              }
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      ScreenUser(token: state.loginToken),
+                                ),
+                              );
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blueAccent,
+                              shape: RoundedRectangleBorder(
+                                  //to set border radius to button
+                                  borderRadius: BorderRadius.circular(4)),
+                              elevation: 0),
+                          child: const Padding(
+                            padding: EdgeInsets.only(),
+                            child: Text('Login',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    // fontSize: fontSize,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: "Roboto")),
+                          )),
+                    ),
+                  ],
+                ),
+              ),
+            )),
+          ),
+        ));
   }
 }
